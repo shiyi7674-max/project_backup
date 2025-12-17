@@ -17,6 +17,10 @@
   <depend>nav2_controller</depend>
   <depend>nav2_planner</depend>
   <depend>nav2_lifecycle_manager</depend>
+  
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>my_robot_description</exec_depend>
+  <exec_depend>rviz2</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

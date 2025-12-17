@@ -16,6 +16,8 @@ install(DIRECTORY
   config
   scripts
   params
+  maps
+  rviz
   DESTINATION share/${PROJECT_NAME}
 )
 
