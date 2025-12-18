@@ -6,7 +6,11 @@ amcl:
     alpha3: 0.2
     alpha4: 0.2
     alpha5: 0.2
+    # =======================================================
+    # ★★★ 关键修改 1：坐标系统一 ★★★
+    # 原为 "base_footprint"，改为 "base_link" 以匹配 Nav2 标准
     base_frame_id: "base_footprint"
+    # =======================================================
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -55,9 +59,8 @@ bt_navigator:
     odom_topic: /odom
     bt_loop_duration: 10
     default_server_timeout: 20
-    enable_groot_monitoring: True
-    groot_zmq_publisher_port: 1666
-    groot_zmq_server_port: 1667
+    # 你的行为树文件路径
+    default_bt_xml_filename: "navigate_to_pose_w_replanning.xml"
     plugin_lib_names:
     - nav2_compute_path_to_pose_action_bt_node
     - nav2_compute_path_through_poses_action_bt_node
@@ -172,7 +175,7 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      robot_radius: 0.17  # 统一修改半径
+      robot_radius: 0.17
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -221,12 +224,12 @@ global_costmap:
       track_unknown_space: true
       
       # ==========================================
-      # ★★★ 修复方案二：地图原点偏移 ★★★
-      # 这让机器人出生在 (0,0) 时位于地图中心
-      #width: 10
-      #height: 10
-      #origin_x: -5.0
-      #origin_y: -5.0
+      # ★★★ 关键修改 2：注释掉尺寸，启用 Static Layer ★★★
+      # 不要在这里写 width/height，让它自己读地图文件
+      # width: 10
+      # height: 10
+      # origin_x: -5.0
+      # origin_y: -5.0
       # ==========================================
 
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -262,6 +265,7 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: True
+    # 这里的地图名会被 Launch 文件传入的参数覆盖，所以写啥都行，或者留空
     yaml_filename: "my_new_map.yaml"
 
 map_saver:

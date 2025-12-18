@@ -86,13 +86,16 @@ def generate_launch_description():
     )
     
     # ★★★ 6. 静态 TF 补丁 (解决 Gazebo 传感器坐标系长名字问题) ★★★
-    # 之前加在 nav2_sim 里了，但在 sim_base 里加更稳妥
     lidar_tf_fix = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='lidar_tf_fix',
         arguments=['0', '0', '0', '0', '0', '0', 'lidar_link', 'my_robot/base_footprint/lidar'],
-        output='screen'
+        output='screen',
+        # ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+        # 必须加上这一行！否则 TF 时间戳和雷达数据对不上
+        parameters=[{'use_sim_time': True}]
+        # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
     )
 
     return LaunchDescription([

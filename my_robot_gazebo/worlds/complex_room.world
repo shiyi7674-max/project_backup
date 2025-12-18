@@ -1,0 +1,154 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="complex_room">
+
+    <!-- ================= Physics & Systems ================= -->
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="libignition-gazebo-physics-system.so"
+            name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="libignition-gazebo-user-commands-system.so"
+            name="ignition::gazebo::systems::UserCommands"/>
+    <plugin filename="libignition-gazebo-scene-broadcaster-system.so"
+            name="ignition::gazebo::systems::SceneBroadcaster"/>
+
+    <!-- ================= Light ================= -->
+    <light type="directional" name="sun">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <direction>-0.5 0.2 -1</direction>
+    </light>
+
+    <!-- ================= Ground ================= -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>50 50</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>50 50</size>
+            </plane>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ================= Outer Walls ================= -->
+    <!-- 北 -->
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>12 0.1 1</size></box></geometry></collision>
+        <visual><geometry><box><size>12 0.1 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- 南 -->
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>12 0.1 1</size></box></geometry></collision>
+        <visual><geometry><box><size>12 0.1 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- 东 -->
+    <model name="wall_east">
+      <static>true</static>
+      <pose>6 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>0.1 12 1</size></box></geometry></collision>
+        <visual><geometry><box><size>0.1 12 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- 西 -->
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-6 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>0.1 12 1</size></box></geometry></collision>
+        <visual><geometry><box><size>0.1 12 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- ================= Inner Wall with Door ================= -->
+    <!-- 左半 -->
+    <model name="inner_wall_left">
+      <static>true</static>
+      <pose>-2 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>3.2 0.1 1</size></box></geometry></collision>
+        <visual><geometry><box><size>3.2 0.1 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- 右半 -->
+    <model name="inner_wall_right">
+      <static>true</static>
+      <pose>2 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>3.2 0.1 1</size></box></geometry></collision>
+        <visual><geometry><box><size>3.2 0.1 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- ================= Obstacles ================= -->
+    <model name="obstacle_1">
+      <static>true</static>
+      <pose>-2 3 0.2 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>0.6 0.6 0.4</size></box></geometry></collision>
+        <visual><geometry><box><size>0.6 0.6 0.4</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="obstacle_2">
+      <static>true</static>
+      <pose>3 -2 0.2 0 0 0</pose>
+      <link name="link">
+        <collision><geometry><box><size>0.5 1.0 0.4</size></box></geometry></collision>
+        <visual><geometry><box><size>0.5 1.0 0.4</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- ================= Grasp Objects ================= -->
+    <!-- 5 cm cube -->
+    <model name="cube_5cm">
+      <static>false</static>
+      <pose>-1 2 0.025 0 0 0</pose>
+      <link name="link">
+        <inertial><mass>0.05</mass></inertial>
+        <collision><geometry><box><size>0.05 0.05 0.05</size></box></geometry></collision>
+        <visual><geometry><box><size>0.05 0.05 0.05</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- 10 cm cube -->
+    <model name="cube_10cm">
+      <static>false</static>
+      <pose>3 2 0.05 0 0 0</pose>
+      <link name="link">
+        <inertial><mass>0.2</mass></inertial>
+        <collision><geometry><box><size>0.1 0.1 0.1</size></box></geometry></collision>
+        <visual><geometry><box><size>0.1 0.1 0.1</size></box></geometry></visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
+
