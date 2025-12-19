@@ -1,9 +1,9 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 
@@ -12,10 +12,16 @@ def generate_launch_description():
     pkg_name = 'my_robot_description'
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     
-    # ★★★ 修改 1: 获取存放 world 文件的包路径 ★★★
-    # 注意：这里我们要找的是 my_robot_gazebo 这个包
-    pkg_world = get_package_share_directory('my_robot_gazebo')
-    world_file = os.path.join(pkg_world, 'worlds', 'simple_room.world')
+    # 获取存放 world 文件的包路径 
+    pkg_gazebo_worlds = get_package_share_directory('my_robot_gazebo')
+    
+    # === 新增：声明 world 参数 ===
+    # 默认值可以是 empty.sdf 或者 simple_room.world
+    world_arg = DeclareLaunchArgument(
+        'world',
+        default_value='complex_room.world',
+        description='World file name'
+    )
 
     # 1. URDF / xacro
     xacro_file = os.path.join(
@@ -40,13 +46,23 @@ def generate_launch_description():
     )
 
     # 3. 启动 Ignition Gazebo 6
+    # === 修改：动态构建 Gazebo 参数 ===
+    # 拼接路径： .../my_robot_gazebo/worlds/ + <world_name>
+    world_path = PathJoinSubstitution([
+        pkg_gazebo_worlds, 
+        'worlds', 
+        LaunchConfiguration('world')
+    ])
+    
+    # 拼接命令参数： -r -v 4 <world_path>
+    gz_args_list = ['-r -v 4 ', world_path]
+
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
         launch_arguments={
-            # ★★★ 修改 2: 加载我们的 simple_room.world ★★★
-            'gz_args': f'-r -v 4 "{world_file}"'
+            'gz_args': gz_args_list
         }.items(),
     )
 
@@ -90,7 +106,7 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='lidar_tf_fix',
-        arguments=['0', '0', '0', '0', '0', '0', 'lidar_link', 'my_robot/base_footprint/lidar'],
+        arguments=['0.20', '0', '0.01', '0', '0', '0', 'lidar_link', 'my_robot/base_footprint/lidar'],
         output='screen',
         # ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
         # 必须加上这一行！否则 TF 时间戳和雷达数据对不上
@@ -104,4 +120,5 @@ def generate_launch_description():
         spawn,
         bridge,
         lidar_tf_fix, # 别忘了返回这个节点
+        world_arg,
     ])
