@@ -14,7 +14,7 @@ def generate_launch_description():
             output='screen',
             arguments=[
                 '-d',
-                os.path.join(pkg_nav, 'config', 'rviz', 'view_robot.rviz')
+                os.path.join(pkg_nav, 'rviz', 'nav2_view.rviz')
             ],
             parameters=[{'use_sim_time': True}]
         )

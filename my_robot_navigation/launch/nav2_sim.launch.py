@@ -17,17 +17,15 @@ def generate_launch_description():
     map_arg = DeclareLaunchArgument(
         'map',
         default_value=os.path.join(
-            pkg_nav, 'config', 'maps', 'my_new_map.yaml'
+            pkg_nav, 'maps', 'my_new_map.yaml'
         ),
-        description='/home/q11/me332_project/src/my_robot_navigation/maps/my_new_map.yaml'
+        description='Full path to map yaml file to load'
     )
 
     # ========= 启动描述 =========
     return LaunchDescription([
-
         # --- 地图参数 ---
         map_arg,
-
         # --- 1. 仿真 / 机器人 / TF / 传感器 ---
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -37,37 +35,36 @@ def generate_launch_description():
 
         # --- 2. Nav2（地图导航模式，非 SLAM） ---
         #IncludeLaunchDescription(
-         #   PythonLaunchDescriptionSource(
-         #       os.path.join(pkg_nav2, 'launch', 'bringup_launch.py')
-          #  ),
-          #  launch_arguments={
-           #     'use_sim_time': 'true',
-           #     'map': LaunchConfiguration('map'),
-           #     'params_file': os.path.join(
-            #        pkg_nav, 'params', 'nav2_params.yaml'
-            #    ),
-            #    'autostart': 'true',
-            #    #'use_composition': 'false'
-            #}.items()
-       # ),
+        #    PythonLaunchDescriptionSource(
+        #        os.path.join(pkg_nav2, 'launch', 'bringup_launch.py')
+        #    ),
+        #    launch_arguments={
+        #        'use_sim_time': 'true',
+        #        'map': LaunchConfiguration('map'),
+        #        'params_file': os.path.join(
+        #            pkg_nav, 'params', 'nav2_params.yaml'
+        #        ),
+        #        'autostart': 'true',
+        #        #'use_composition': 'false'
+        #    }.items()
+        #),
        
         IncludeLaunchDescription(
-    PythonLaunchDescriptionSource(
-        os.path.join(pkg_nav2, 'launch', 'bringup_launch.py')
-    ),
-    launch_arguments={
-        'use_sim_time': 'true',
-        'map': LaunchConfiguration('map'),
-        'params_file': os.path.join(
-            pkg_nav,
-            'config',
-            'nav2_params',
-            'amcl_minimal.yaml'
-        ),
-        'autostart': 'true',
-        'use_composition': 'false'
-    }.items()
-),
+    	    PythonLaunchDescriptionSource(
+        	os.path.join(pkg_nav2, 'launch', 'bringup_launch.py')
+    	    ),
+    	    launch_arguments={
+        	'use_sim_time': 'true',
+        	'map': LaunchConfiguration('map'),
+        	'params_file': os.path.join(
+            	    pkg_nav,
+            	'params',
+            	'nav2_params.yaml'
+        	),
+        	'autostart': 'true',
+        	'use_composition': 'False'
+    	    }.items()
+	),
 
 
         # --- 3. RViz（始终启动） ---

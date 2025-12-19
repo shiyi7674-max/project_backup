@@ -30,7 +30,8 @@ amcl:
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
     resample_interval: 1
-    robot_model_type: "differential"
+    #robot_model_type: "differential"
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
@@ -250,6 +251,8 @@ global_costmap:
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
+        #subscription_topic: "/map"  # 显式指定订阅 /map 话题
+
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
@@ -266,7 +269,7 @@ map_server:
   ros__parameters:
     use_sim_time: True
     # 这里的地图名会被 Launch 文件传入的参数覆盖，所以写啥都行，或者留空
-    yaml_filename: "my_new_map.yaml"
+    yaml_filename: "/home/q11/me332_project/src/my_robot_navigation/maps/my_new_map.yaml"
 
 map_saver:
   ros__parameters:
